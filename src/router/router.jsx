@@ -1,10 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
-
-import publicRouter from "./publicRouter";
-import privateRouter from "./privateRouter";
+import Login from "../pages/auth/Login";
 
 // create browser router
-const router = createBrowserRouter([...publicRouter, ...privateRouter]);
+const router = createBrowserRouter([
+  {
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+    ],
+  },
+]);
 
 // export router
 export default router;
