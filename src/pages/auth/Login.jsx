@@ -7,7 +7,7 @@ const Login = () => {
       <div className="auth-wrapper">
         <div className="auth-top">
           <h2>Login to Get Started</h2>
-          <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+          <p>Lorem, ipsum dolor amet consectetur adipisicing elit.</p>
           <div className="auth-form">
             <form>
               <input
