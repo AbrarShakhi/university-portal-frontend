@@ -1,32 +1,99 @@
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../styles/auth.css";
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    auth: "",
+    password: "",
+  });
+
+  const [loginError, setLoginError] = useState("");
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const baseUrl = "/api/v1/auth/std-home";
+
+      try {
+        await axios.get(baseUrl);
+
+        navigate("/std-home");
+      } catch (error) {
+        console.error("Auth check failed:", error.message);
+      }
+    };
+
+    checkAuthStatus();
+  }, [navigate]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoginError("");
+    setIsLoading(true);
+
+    const loginUrl = "/api/v1/auth/login";
+
+    try {
+      const response = await axios.post(loginUrl, formData);
+
+      navigate("/std-home");
+    } catch (error) {
+      console.error("Login failed response:", error.response.data);
+    }
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-wrapper">
         <div className="auth-top">
           <h2>Login to Get Started</h2>
-          <p>Lorem, ipsum dolor amet consectetur adipisicing elit.</p>
+          <p>Enter your details to access your account.</p>
           <div className="auth-form">
-            <form>
+            <form onSubmit={handleSubmit}>
               <input
                 type="text"
                 placeholder="Email or Phone number"
                 name="auth"
+                value={formData.auth}
+                onChange={handleChange}
+                required
               />
-              <input type="password" placeholder="Password" name="password" />
-              <button>Log In</button>
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+
+              <button type="submit">Log In</button>
             </form>
-            <Link className="forgot-password">Forgot Password</Link>
+
+            <Link to="/forgot-password" className="forgot-password">
+              Forgot Password
+            </Link>
           </div>
         </div>
 
         <div className="bottom">
-          <Link className="active-account">Active account</Link>
+          <Link to="/activate-account" className="active-account">
+            Activate account
+          </Link>
         </div>
       </div>
-
       <div className="img-wrapper"></div>
     </div>
   );
