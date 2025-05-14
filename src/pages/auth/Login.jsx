@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/auth.css";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../features/auth/authApiSlice";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     auth: "",
@@ -21,7 +24,7 @@ const Login = () => {
       try {
         await axios.get(baseUrl);
 
-        navigate("/std-home");
+        navigate("/");
       } catch (error) {
         console.error("Auth check failed:", error.message);
       }
@@ -43,12 +46,13 @@ const Login = () => {
     setLoginError("");
     setIsLoading(true);
 
+    dispatch(loginUser(formData));
     const loginUrl = "/api/v1/auth/login";
 
     try {
       const response = await axios.post(loginUrl, formData);
 
-      navigate("/std-home");
+      navigate("/");
     } catch (error) {
       console.error("Login failed response:", error.response.data);
     }

@@ -1,22 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../pages/auth/Login";
-import Home from "../pages/auth/Home";
+import privateRouter from "./privateRouter";
+import publicRouter from "./publicRouter";
 
 // create browser router
-const router = createBrowserRouter([
-  {
-    children: [
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/std-home",
-        element: <Home />,
-      },
-    ],
+const router = createBrowserRouter([...publicRouter, ...privateRouter], {
+  future: {
+    v7_relativeSplatPath: true,
+    v7_startTransition: true,
   },
-]);
+});
 
 // export router
 export default router;
