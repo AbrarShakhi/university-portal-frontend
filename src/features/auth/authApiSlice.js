@@ -18,6 +18,7 @@ export const getLoggedInUser = createAsyncThunk(
   },
 );
 
+//Login User
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (formData, { rejectWithValue }) => {

@@ -74,7 +74,7 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
-                placeholder="Email or Phone number"
+                placeholder="Student ID"
                 name="auth"
                 value={formData.auth}
                 onChange={handleChange}
@@ -107,7 +107,7 @@ const Login = () => {
         </div>
 
         <div className="bottom">
-          <Link to="/activate-account" className="active-account">
+          <Link to="/activate" className="active-account">
             Activate account
           </Link>
         </div>
