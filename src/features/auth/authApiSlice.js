@@ -168,3 +168,59 @@ export const activateAccount = createAsyncThunk(
     }
   },
 );
+
+//forgot password
+export const forgotPassword = createAsyncThunk(
+  "auth/forgot-password",
+  async (data, { rejectWithValue }) => {
+    try {
+      const { id, password, otp } = data;
+
+      const url = `http://localhost:8000/api/v1/auth/forgot-password/otp=${otp}`;
+
+      const requestBody = { id, password };
+
+      console.log(
+        "Frontend (authApiSlice): Sending forgot password request to:",
+        url,
+      );
+      console.log(
+        "Frontend (authApiSlice): Sending forgot password request body:",
+        requestBody,
+      );
+
+      const response = await axios.post(url, requestBody, {
+        withCredentials: true,
+      });
+
+      console.log(
+        "Frontend (authApiSlice): Forgot password successful",
+        response.data,
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Frontend (authApiSlice): forgotPassword failed:", error);
+      if (error.response) {
+        console.error(
+          "Frontend (authApiSlice): forgotPassword Error Response Data:",
+          error.response.data,
+        );
+
+        return rejectWithValue(
+          error.response.data.message || "Failed to change password",
+        );
+      } else if (error.request) {
+        console.error(
+          "Frontend (authApiSlice): forgotPassword Network Error: No response received",
+          error.request,
+        );
+      } else {
+        console.error(
+          "Frontend (authApiSlice): forgotPassword Request Setup Error:",
+          error.message,
+        );
+      }
+    }
+  },
+);
