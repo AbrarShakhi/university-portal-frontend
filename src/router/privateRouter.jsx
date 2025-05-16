@@ -6,7 +6,7 @@ const privateRouter = [
     element: <PrivateGard />,
     children: [
       {
-        path: "/",
+        path: "/std-home",
         element: <Home />,
       },
     ],

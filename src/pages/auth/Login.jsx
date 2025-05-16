@@ -24,11 +24,9 @@ const Login = () => {
     password: "",
   });
 
-  const [formValidationError, setFormValidationError] = useState("");
-
   useEffect(() => {
     if (authStatus === "succeeded") {
-      navigate("/");
+      navigate("/std-home");
     }
 
     const checkAuthStatus = async () => {
@@ -58,12 +56,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormValidationError("");
-
-    if (!formData.auth || !formData.password) {
-      setFormValidationError("Please enter both email/phone and password.");
-      return;
-    }
 
     try {
       const resultAction = await dispatch(loginUser(formData)).unwrap();
@@ -98,10 +90,6 @@ const Login = () => {
               />
 
               {authLoading && <p>Logging in...</p>}
-
-              {formValidationError && (
-                <p className="error-message">{formValidationError}</p>
-              )}
 
               {authStatus === "failed" && authError && (
                 <p className="error-message">{authError}</p>
