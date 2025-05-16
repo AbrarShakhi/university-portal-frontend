@@ -2,11 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/auth.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../features/auth/authApiSlice";
 
+import {
+  selectAuthStatus,
+  selectAuthError,
+  selectAuthLoading,
+} from "../../features/auth/authSlice";
+
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const authStatus = useSelector(selectAuthStatus);
+  const authError = useSelector(selectAuthError);
+  const authLoading = useSelector(selectAuthLoading);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -15,23 +24,29 @@ const Login = () => {
     password: "",
   });
 
-  const [loginError, setLoginError] = useState("");
+  const [formValidationError, setFormValidationError] = useState("");
 
   useEffect(() => {
+    if (authStatus === "succeeded") {
+      navigate("/");
+    }
+
     const checkAuthStatus = async () => {
       const baseUrl = "/api/v1/auth/std-home";
 
-      try {
-        await axios.get(baseUrl);
-
-        navigate("/");
-      } catch (error) {
-        console.error("Auth check failed:", error.message);
+      if (authStatus === "idle") {
+        try {
+          await axios.get("http://localhost:8000" + baseUrl, {
+            withCredentials: true,
+          });
+        } catch (error) {
+          console.error("Auth check failed:", error.message);
+        }
       }
     };
 
     checkAuthStatus();
-  }, [navigate]);
+  }, [authStatus, navigate, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,18 +58,17 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoginError("");
-    setIsLoading(true);
+    setFormValidationError("");
 
-    dispatch(loginUser(formData));
-    const loginUrl = "/api/v1/auth/login";
+    if (!formData.auth || !formData.password) {
+      setFormValidationError("Please enter both email/phone and password.");
+      return;
+    }
 
     try {
-      const response = await axios.post(loginUrl, formData);
-
-      navigate("/");
+      const resultAction = await dispatch(loginUser(formData)).unwrap();
     } catch (error) {
-      console.error("Login failed response:", error.response.data);
+      console.error("Login failed:", error);
     }
   };
 
@@ -83,7 +97,19 @@ const Login = () => {
                 required
               />
 
-              <button type="submit">Log In</button>
+              {authLoading && <p>Logging in...</p>}
+
+              {formValidationError && (
+                <p className="error-message">{formValidationError}</p>
+              )}
+
+              {authStatus === "failed" && authError && (
+                <p className="error-message">{authError}</p>
+              )}
+
+              <button type="submit" disabled={authLoading}>
+                {authLoading ? "Logging In..." : "Log In"}{" "}
+              </button>
             </form>
 
             <Link to="/forgot-password" className="forgot-password">

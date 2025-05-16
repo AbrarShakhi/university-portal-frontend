@@ -5,9 +5,12 @@ export const getLoggedInUser = createAsyncThunk(
   "auth/getLoggedInUser",
   async () => {
     try {
-      const response = await axios.get("http://localhost:5050/api/v1/auth/me", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/auth/std-home",
+        {
+          withCredentials: true,
+        },
+      );
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
@@ -18,7 +21,7 @@ export const getLoggedInUser = createAsyncThunk(
 export const loginUser = createAsyncThunk("auth/loginUser", async (data) => {
   try {
     const response = await axios.post(
-      "http://localhost:5050/api/v1/auth/login",
+      "http://localhost:8000/api/v1/auth/login",
       data,
       {
         withCredentials: true,
