@@ -23,10 +23,6 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (formData, { rejectWithValue }) => {
     try {
-      console.log(
-        "Frontend (authApiSlice): formData received in thunk:",
-        formData,
-      );
       const requestBody = {
         id: formData.auth,
         password: formData.password,
@@ -58,10 +54,6 @@ export const loginUser = createAsyncThunk(
           "Frontend (authApiSlice): Login API Error Response Data:",
           error.response.data,
         );
-        console.error(
-          "Frontend (authApiSlice): Login API Error Status:",
-          error.response.status,
-        );
 
         return rejectWithValue(error.response.data.message || "Login failed");
       } else if (error.request) {
@@ -69,13 +61,108 @@ export const loginUser = createAsyncThunk(
           "Frontend (authApiSlice): Login Network Error: No response received",
           error.request,
         );
-        return rejectWithValue("Network error. Please try again.");
       } else {
         console.error(
           "Frontend (authApiSlice): Login Request Setup Error:",
           error.message,
         );
-        return rejectWithValue("An unexpected error occurred.");
+      }
+    }
+  },
+);
+
+//send student OTP
+export const sendOTP = createAsyncThunk(
+  "auth/createUser",
+  async (data, { rejectWithValue }) => {
+    try {
+      const { id, reason } = data;
+
+      const url = `http://localhost:8000/api/v1/auth/resend-otp/reason=${reason}`;
+
+      const requestBody = { id };
+
+      console.log(
+        "Frontend (authApiSlice): Sending OTP request body:",
+        requestBody,
+      );
+
+      const response = await axios.patch(url, requestBody, {
+        withCredentials: true,
+      });
+
+      console.log(
+        "Frontend (authApiSlice): OTP request successful",
+        response.data,
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Frontend (authApiSlice): sendOTP failed:", error);
+      if (error.response) {
+        console.error(
+          "Frontend (authApiSlice): sendOTP Error Response Data:",
+          error.response.data,
+        );
+
+        return rejectWithValue(
+          error.response.data.message || "Failed to send OTP",
+        );
+      } else if (error.request) {
+        console.error(
+          "Frontend (authApiSlice): sendOTP Network Error: No response received",
+          error.request,
+        );
+      } else {
+        console.error(
+          "Frontend (authApiSlice): sendOTP Request Setup Error:",
+          error.message,
+        );
+      }
+    }
+  },
+);
+
+export const activateAccount = createAsyncThunk(
+  "auth/activate",
+  async (data, { rejectWithValue }) => {
+    try {
+      const { id, otp, password } = data;
+
+      const url = `http://localhost:8000/api/v1/auth/activate-account/otp=${otp}`;
+
+      const requestBody = { id, password };
+
+      const response = await axios.post(url, requestBody, {
+        withCredentials: true,
+      });
+
+      console.log(
+        "Frontend (authApiSlice): Account activation successful",
+        response.data,
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Frontend (authApiSlice): activateAccount failed:", error);
+      if (error.response) {
+        console.error(
+          "Frontend (authApiSlice): activateAccount Error Response Data:",
+          error.response.data,
+        );
+
+        return rejectWithValue(
+          error.response.data.message || "Failed to activate account",
+        );
+      } else if (error.request) {
+        console.error(
+          "Frontend (authApiSlice): activateAccount Network Error: No response received",
+          error.request,
+        );
+      } else {
+        console.error(
+          "Frontend (authApiSlice): activateAccount Request Setup Error:",
+          error.message,
+        );
       }
     }
   },
