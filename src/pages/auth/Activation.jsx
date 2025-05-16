@@ -57,6 +57,10 @@ const Activation = () => {
 
       console.log("OTP sent successfully:", resultAction.message);
 
+      setFormData({
+        auth: "",
+      });
+
       navigate("/activate-account");
     } catch (error) {
       console.error("Failed to send OTP:", error);

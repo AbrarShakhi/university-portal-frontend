@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../../styles/auth.css";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../features/auth/authApiSlice";
+import { loginUser, getLoggedInUser } from "../../features/auth/authApiSlice";
 
 import {
   selectAuthStatus,
   selectAuthError,
   selectAuthLoading,
+  setMessageEmpty,
 } from "../../features/auth/authSlice";
 
 const Login = () => {
@@ -19,48 +19,61 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // State for form data
   const [formData, setFormData] = useState({
     auth: "",
     password: "",
   });
+
+  // State for client-side form validation errors
+  const [formValidationError, setFormValidationError] = useState("");
 
   useEffect(() => {
     if (authStatus === "succeeded") {
       navigate("/std-home");
     }
 
-    const checkAuthStatus = async () => {
-      const baseUrl = "/api/v1/auth/std-home";
-
-      if (authStatus === "idle") {
-        try {
-          await axios.get("http://localhost:8000" + baseUrl, {
-            withCredentials: true,
-          });
-        } catch (error) {
-          console.error("Auth check failed:", error.message);
-        }
-      }
-    };
-
-    checkAuthStatus();
+    dispatch(setMessageEmpty());
   }, [authStatus, navigate, dispatch]);
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+    // Clear client-side validation error and Redux errors/messages
+    setFormValidationError("");
+    dispatch(setMessageEmpty());
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Clear previous validation error and Redux errors/messages
+    setFormValidationError("");
+    dispatch(setMessageEmpty());
+
+    if (!formData.auth || !formData.password) {
+      setFormValidationError("Please enter both Student ID and password.");
+      return;
+    }
+
     try {
       const resultAction = await dispatch(loginUser(formData)).unwrap();
+
+      setFormData({
+        auth: "",
+        password: "",
+      });
+
+      navigate("/std-home");
     } catch (error) {
       console.error("Login failed:", error);
+
+      setFormValidationError(error);
     }
   };
 
@@ -79,6 +92,7 @@ const Login = () => {
                 value={formData.auth}
                 onChange={handleChange}
                 required
+                disabled={authLoading}
               />
               <input
                 type="password"
@@ -87,16 +101,21 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                disabled={authLoading}
               />
 
               {authLoading && <p>Logging in...</p>}
 
-              {authStatus === "failed" && authError && (
+              {formValidationError && (
+                <p className="error-message">{formValidationError}</p>
+              )}
+
+              {authStatus === "failed" && authError && !formValidationError && (
                 <p className="error-message">{authError}</p>
               )}
 
               <button type="submit" disabled={authLoading}>
-                {authLoading ? "Logging In..." : "Log In"}{" "}
+                {authLoading ? "Logging In..." : "Log In"}
               </button>
             </form>
 

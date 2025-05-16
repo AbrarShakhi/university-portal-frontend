@@ -54,9 +54,25 @@ const authSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.message = action.payload.message;
-        state.user = action.payload.user;
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        console.log("authSlice: loginUser.fulfilled", action.payload);
+        state.loader = false;
+        state.error = null;
+
+        state.user = action.payload;
+        state.message = "Login successful";
+
+        // Store user data in localStorage upon successful login
+        // Ensure action.payload is not undefined or null before stringifying
+        if (action.payload) {
+          // Check if the payload (user object) exists
+          localStorage.setItem("user", JSON.stringify(action.payload));
+          console.log("authSlice: User data stored in localStorage.");
+        } else {
+          localStorage.removeItem("user");
+          console.log(
+            "authSlice: No user data in payload, localStorage cleared.",
+          );
+        }
       })
       //   .addCase(logoutUser.rejected, (state, action) => {
       //     state.error = action.error.message;

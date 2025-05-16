@@ -122,6 +122,7 @@ export const sendOTP = createAsyncThunk(
   },
 );
 
+//activate account
 export const activateAccount = createAsyncThunk(
   "auth/activate",
   async (data, { rejectWithValue }) => {
