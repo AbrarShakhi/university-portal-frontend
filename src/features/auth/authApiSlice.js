@@ -224,3 +224,44 @@ export const forgotPassword = createAsyncThunk(
     }
   },
 );
+
+//logout User
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const url = `http://localhost:8000/api/v1/auth/logout`;
+
+      console.log("Frontend (authApiSlice): Sending logout request to:", url);
+
+      const response = await axios.post(
+        url,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log("Frontend (authApiSlice): Logout successful", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error("Frontend (authApiSlice): logoutUser failed:", error);
+
+      if (error.response) {
+        console.error(
+          "Frontend (authApiSlice): logoutUser Error Response Data:",
+          error.response.data,
+        );
+        return rejectWithValue(
+          error.response.data.message || "Failed to log out",
+        );
+      } else {
+        console.error(
+          "Frontend (authApiSlice): logoutUser Request Setup Error:",
+          error.message,
+        );
+      }
+    }
+  },
+);

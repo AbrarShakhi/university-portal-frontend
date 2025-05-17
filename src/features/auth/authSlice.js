@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getLoggedInUser, loginUser } from "./authApiSlice";
+import { getLoggedInUser, loginUser, logoutUser } from "./authApiSlice";
 
 // Function to safely get and parse user from localStorage
 const safelyGetUserFromLocalStorage = () => {
@@ -46,6 +46,7 @@ const authSlice = createSlice({
       state.message = null;
       state.error = null;
       state.user = null;
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
@@ -64,7 +65,6 @@ const authSlice = createSlice({
         // Store user data in localStorage upon successful login
         // Ensure action.payload is not undefined or null before stringifying
         if (action.payload) {
-          // Check if the payload (user object) exists
           localStorage.setItem("user", JSON.stringify(action.payload));
           console.log("authSlice: User data stored in localStorage.");
         } else {
@@ -74,14 +74,14 @@ const authSlice = createSlice({
           );
         }
       })
-      //   .addCase(logoutUser.rejected, (state, action) => {
-      //     state.error = action.error.message;
-      //   })
-      //   .addCase(logoutUser.fulfilled, (state, action) => {
-      //     state.message = action.payload.message;
-      //     state.user = null;
-      //     localStorage.removeItem("user");
-      //   })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.message = action.payload.message;
+        state.user = null;
+        localStorage.removeItem("user");
+      })
       .addCase(getLoggedInUser.rejected, (state, action) => {
         state.error = action.error.message;
         state.user = null;
