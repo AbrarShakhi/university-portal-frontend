@@ -7,7 +7,6 @@ import React from "react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {/* Wrap your App component with the Provider */}
     <Provider store={store}>
       <App />
     </Provider>

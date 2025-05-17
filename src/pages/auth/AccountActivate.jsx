@@ -1,40 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../../styles/auth.css";
+import React, { useState, useEffect } from "react"; // Import useEffect
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, getLoggedInUser } from "../../features/auth/authApiSlice";
-
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import "../../styles/auth.css";
 import {
-  selectAuthStatus,
   selectAuthError,
   selectAuthLoading,
+  selectAuthStatus,
+  selectAuthMessage,
   setMessageEmpty,
 } from "../../features/auth/authSlice";
+import { activateAccount } from "../../features/auth/authApiSlice";
 
-const Login = () => {
+const AccountActivate = () => {
   const authStatus = useSelector(selectAuthStatus);
   const authError = useSelector(selectAuthError);
   const authLoading = useSelector(selectAuthLoading);
+  const authMessage = useSelector(selectAuthMessage);
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // State for form data
   const [formData, setFormData] = useState({
     auth: "",
     password: "",
+    otp: "",
   });
 
   // State for client-side form validation errors
   const [formValidationError, setFormValidationError] = useState("");
 
+  // Effect to clear messages/errors from Redux state
   useEffect(() => {
-    if (authStatus === "succeeded") {
-      navigate("/std-home");
-    }
-
     dispatch(setMessageEmpty());
-  }, [authStatus, navigate, dispatch]);
+  }, [dispatch]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -43,8 +42,9 @@ const Login = () => {
       ...prevState,
       [name]: value,
     }));
-    // Clear client-side validation error and Redux errors/messages
+
     setFormValidationError("");
+
     dispatch(setMessageEmpty());
   };
 
@@ -52,26 +52,29 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear previous validation error and Redux errors/messages
     setFormValidationError("");
+
     dispatch(setMessageEmpty());
 
-    if (!formData.auth || !formData.password) {
-      setFormValidationError("Please enter both Student ID and password.");
+    if (!formData.auth || !formData.password || !formData.otp) {
+      setFormValidationError("Please fill in all fields.");
       return;
     }
 
     try {
-      const resultAction = await dispatch(loginUser(formData)).unwrap();
+      const resultAction = await dispatch(
+        activateAccount({
+          id: formData.auth,
+          password: formData.password,
+          otp: formData.otp,
+        }),
+      ).unwrap(); // unwrap() will throw the error from rejectWithValue
 
-      setFormData({
-        auth: "",
-        password: "",
-      });
+      console.log("Account activated successfully:", resultAction.message);
 
-      navigate("/std-home");
+      navigate("/login");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Account activation failed:", error);
 
       setFormValidationError(error);
     }
@@ -81,8 +84,9 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-wrapper">
         <div className="auth-top">
-          <h2>Login to Get Started</h2>
-          <p>Enter your details to access your account.</p>
+          <h2>Activate your Account</h2>
+          <p>Enter your details to activate your account.</p>
+
           <div className="auth-form">
             <form onSubmit={handleSubmit}>
               <input
@@ -94,6 +98,7 @@ const Login = () => {
                 required
                 disabled={authLoading}
               />
+
               <input
                 type="password"
                 placeholder="Password"
@@ -104,7 +109,17 @@ const Login = () => {
                 disabled={authLoading}
               />
 
-              {authLoading && <p>Logging in...</p>}
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                name="otp"
+                value={formData.otp}
+                onChange={handleChange}
+                required
+                disabled={authLoading}
+              />
+
+              {authLoading && <p>Activating account...</p>}
 
               {formValidationError && (
                 <p className="error-message">{formValidationError}</p>
@@ -114,26 +129,21 @@ const Login = () => {
                 <p className="error-message">{authError}</p>
               )}
 
+              {authStatus === "success" && authMessage && !authLoading && (
+                <p className="success-message">{authMessage}</p>
+              )}
+
               <button type="submit" disabled={authLoading}>
-                {authLoading ? "Logging In..." : "Log In"}
+                {authLoading ? "Activating account..." : "Activate account"}
               </button>
             </form>
-
-            <Link to="/forgot-password" className="forgot-password">
-              Forgot Password
-            </Link>
           </div>
         </div>
-
-        <div className="bottom">
-          <Link to="/activate" className="active-account">
-            Activate account
-          </Link>
-        </div>
       </div>
+
       <div className="img-wrapper"></div>
     </div>
   );
 };
 
-export default Login;
+export default AccountActivate;

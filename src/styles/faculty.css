@@ -1,0 +1,114 @@
+/* Styles for the main container of the faculty list content */
+.profile-container {
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 900px; /* Adjust max-width for the table */
+  margin: 20px auto;
+  text-align: center; /* Center align text within the container */
+}
+
+/* Styling for the heading */
+.profile-container h2 {
+  color: #0056b3;
+  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+/* Styles for the wrapper around the table (profile-table-header) */
+/* If this wrapper is just around the table, its main purpose might be overflow */
+.profile-table-header {
+  overflow-x: auto; /* Add horizontal scroll on small screens if table is wide */
+  margin-top: 20px; /* Space above the table */
+  /* Add padding here if you want space around the table inside this wrapper */
+  padding: 0;
+}
+
+/* Styles for the faculty list table */
+.profile-table {
+  width: 100%; /* Make table take full width of its container */
+  border-collapse: collapse; /* Collapse borders between cells */
+  margin: 0 auto; /* Center the table within its wrapper */
+  font-size: 1em;
+  color: #333;
+  border: 1px solid #e0eeef; /* Outer border for the table */
+  border-radius: 8px; /* Rounded corners for the table */
+  overflow: hidden; /* Hide overflow from rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow for the table */
+}
+
+/* Styles for the table header (thead with class head) */
+.profile-table thead.head {
+  background-color: #007bff; /* Primary blue background for header */
+  color: #ffffff; /* White text for header */
+}
+
+/* Styles for table header cells (th) */
+.profile-table th {
+  padding: 12px 15px; /* Padding inside header cells */
+  text-align: left; /* Align header text to the left */
+  font-weight: 600; /* Semi-bold font weight */
+  border-bottom: 2px solid #0056b3; /* Darker blue border below header */
+}
+
+/* Styles for table body (tbody with class body) */
+.profile-table tbody.body tr {
+  border-bottom: 1px solid #e0eeef; /* Light border between rows */
+}
+
+/* Alternating row colors for better readability (optional) */
+.profile-table tbody.body tr:nth-child(even) {
+  background-color: #f8f9fa; /* Light grey background for even rows */
+}
+
+/* Remove border from the last row in the body */
+.profile-table tbody.body tr:last-child {
+  border-bottom: none;
+}
+
+/* Styles for table data cells (td) */
+.profile-table td {
+  padding: 12px 15px; /* Padding inside data cells */
+  text-align: left; /* Align data text to the left */
+  color: #555; /* Standard text color for data */
+  word-break: break-word; /* Break long words to prevent overflow */
+}
+
+/* Hover effect for rows */
+.profile-table tbody.body tr:hover {
+  background-color: #e9ecef; /* Lighter background on hover */
+  cursor: pointer; /* Indicate clickable rows if they are interactive */
+}
+
+/* Styling for messages (loading, error, not available) */
+/* Targeting paragraphs directly within profile-container */
+.profile-container > p {
+  font-size: 1em;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.profile-container .error-message {
+  color: #dc3545; /* Red color for errors */
+  font-weight: 500;
+}
+
+/* Styling for the 'No faculties found' message container */
+/* Reusing .user class from previous examples */
+.profile-container .user {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px dashed #ced4da;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  color: #555;
+  text-align: center;
+}
+
+.profile-container .user p {
+  margin: 0; /* Remove margin from paragraph inside .user */
+  font-size: 1em;
+}
