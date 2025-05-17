@@ -1,4 +1,5 @@
-import Home from "../pages/auth/Home";
+import Welcome from "../pages/menu/Welcome";
+import Home from "../pages/User/Home";
 import PrivateGard from "./PrivateGuard";
 
 const privateRouter = [
@@ -8,6 +9,12 @@ const privateRouter = [
       {
         path: "/std-home",
         element: <Home />,
+        children: [
+          {
+            path: "welcome",
+            element: <Welcome />,
+          },
+        ],
       },
     ],
   },
