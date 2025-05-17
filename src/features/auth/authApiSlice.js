@@ -2,8 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const getLoggedInUser = createAsyncThunk(
-  "auth/getLoggedInUser",
-  async () => {
+  "auth/getLoggedInUser", // Action type name
+  async (_, { rejectWithValue }) => {
+    // Use _ for unused first argument, add rejectWithValue
     try {
       const response = await axios.get(
         "http://localhost:8000/api/v1/auth/std-home",
@@ -11,9 +12,20 @@ export const getLoggedInUser = createAsyncThunk(
           withCredentials: true,
         },
       );
+
       return response.data;
     } catch (error) {
-      throw new Error(error.response.data.message);
+      if (error.response) {
+        console.error(
+          "Frontend (authApiSlice): getLoggedInUser Error Response Data:",
+          error.response.data,
+        );
+      } else {
+        console.error(
+          "Frontend (authApiSlice): getLoggedInUser Request Setup Error:",
+          error.message,
+        );
+      }
     }
   },
 );

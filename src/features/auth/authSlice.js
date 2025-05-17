@@ -86,8 +86,29 @@ const authSlice = createSlice({
         state.error = action.error.message;
         state.user = null;
       })
+      // **FIXED:** Set state.user to action.payload.data for getLoggedInUser fulfilled
       .addCase(getLoggedInUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        console.log("authSlice: getLoggedInUser.fulfilled", action.payload);
+        state.loader = false;
+        state.error = null;
+
+        // Set the user state to the nested 'data' object
+        state.user = action.payload.data;
+        state.message =
+          action.payload.message || "User data fetched successfully";
+
+        // Store the nested user data in localStorage
+        if (action.payload.data) {
+          localStorage.setItem("user", JSON.stringify(action.payload.data));
+          console.log(
+            "authSlice: User data from getLoggedInUser stored in localStorage.",
+          );
+        } else {
+          localStorage.removeItem("user");
+          console.log(
+            "authSlice: No user data in getLoggedInUser payload.data, localStorage cleared.",
+          );
+        }
       });
   },
 });
