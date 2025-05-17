@@ -277,3 +277,51 @@ export const logoutUser = createAsyncThunk(
     }
   },
 );
+
+//change password
+export const changePassword = createAsyncThunk(
+  "auth/change-password",
+  async (data, { rejectWithValue }) => {
+    try {
+      const { currentPassword, newPassword } = data;
+
+      const url = `http://localhost:8000/api/v1/auth/change-password`;
+
+      const requestBody = { currentPassword, newPassword };
+
+      console.log(
+        "Frontend (authApiSlice): Sending change password request to:",
+        url,
+      );
+      console.log(
+        "Frontend (authApiSlice): Sending change password request body:",
+        requestBody,
+      );
+
+      const response = await axios.patch(url, requestBody, {
+        withCredentials: true,
+      });
+
+      console.log(
+        "Frontend (authApiSlice): Change password successful",
+        response.data,
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Frontend (authApiSlice): changePassword failed:", error);
+
+      if (error.response) {
+        console.error(
+          "Frontend (authApiSlice): changePassword Error Response Data:",
+          error.response.data,
+        );
+      } else {
+        console.error(
+          "Frontend (authApiSlice): changePassword Request Setup Error:",
+          error.message,
+        );
+      }
+    }
+  },
+);

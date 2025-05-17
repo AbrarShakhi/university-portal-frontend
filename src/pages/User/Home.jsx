@@ -41,15 +41,20 @@ const Home = () => {
               </li>
 
               <li>
-                <NavLink to="/std-home/accounts-ledger">Profile</NavLink>
+                <NavLink
+                  to="profile"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  Profile
+                </NavLink>
               </li>
 
               <li>
-                <NavLink to="/std-home/profile">Advising</NavLink>
+                <NavLink to="advising">Advising</NavLink>
               </li>
 
               <li>
-                <NavLink to="/std-home/faculty">Accounts Ledger</NavLink>
+                <NavLink to="ledger">Accounts Ledger</NavLink>
               </li>
 
               <li>
@@ -57,7 +62,7 @@ const Home = () => {
               </li>
 
               <li>
-                <NavLink to="/std-home/grade-report">Faculty</NavLink>
+                <NavLink to="faculty">Faculty</NavLink>
               </li>
               <li>
                 <NavLink to="/std-home/evaluation">Faculty Evaluation</NavLink>
@@ -66,10 +71,15 @@ const Home = () => {
                 <NavLink to="/std-home/evaluation">Courses</NavLink>
               </li>
               <li>
-                <NavLink to="/std-home/evaluation">CGPA calculator</NavLink>
+                <NavLink to="grade-report">CGPA calculator</NavLink>
               </li>
               <li>
-                <NavLink to="/std-home/evaluation">Change Password</NavLink>
+                <NavLink
+                  to="change-password"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  Change Password
+                </NavLink>
               </li>
               <li>
                 <button onClick={handleLogout} className="logout-button">
