@@ -14,13 +14,12 @@ import "../../styles/gradeReport.css";
 const GradeReport = () => {
   const dispatch = useDispatch();
 
-  // Select grade report state from Redux
   const gradeReportData = useSelector(selectGradeReportData);
   const loading = useSelector(selectGradeReportLoading);
   const error = useSelector(selectGradeReportError);
 
   useEffect(() => {
-    console.log("GradeReport.jsx: Dispatching getGradeReport thunk on mount.");
+    console.log("GradeReport.jsx: Dispatching gradeReport thunk on mount.");
     dispatch(gradeReport());
   }, [dispatch]);
 
@@ -43,20 +42,35 @@ const GradeReport = () => {
           <div className="cgpa-section">
             <h3>
               Cumulative CGPA:
-              {gradeReportData.cumulativeCGPA?.toFixed(2) || "N/A"}
+              {gradeReportData.cumulativeCGPA !== undefined &&
+              gradeReportData.cumulativeCGPA !== null
+                ? parseFloat(gradeReportData.cumulativeCGPA).toFixed(2)
+                : "N/A"}
             </h3>
           </div>
 
+          {/* Display Semester-wise Results */}
           {gradeReportData.semesterWiseResults &&
-            Object.keys(gradeReportData.semesterWiseResults).length > 0 && (
+            Array.isArray(gradeReportData.semesterWiseResults) &&
+            gradeReportData.semesterWiseResults.length > 0 && (
               <div className="semester-results-section">
                 <h3>Semester-wise CGPA</h3>
                 <ul className="semester-list">
-                  {Object.entries(gradeReportData.semesterWiseResults).map(
-                    ([semesterYear, cgpa]) => (
-                      <li key={semesterYear} className="semester-item">
-                        <strong>{semesterYear}:</strong>
-                        {cgpa?.toFixed(2) || "N/A"}
+                  {gradeReportData.semesterWiseResults.map(
+                    (semesterResult, index) => (
+                      <li
+                        key={`${semesterResult.year}-${semesterResult.semester}-${index}`}
+                        className="semester-item"
+                      >
+                        {/* Display semester and year, and CGPA */}
+                        <strong>
+                          {semesterResult.year} {semesterResult.semester}:
+                        </strong>
+                        {/* Use optional chaining and toFixed for formatting */}
+                        {semesterResult.cgpa !== undefined &&
+                        semesterResult.cgpa !== null
+                          ? parseFloat(semesterResult.cgpa).toFixed(2)
+                          : "N/A"}
                       </li>
                     ),
                   )}
@@ -64,6 +78,7 @@ const GradeReport = () => {
               </div>
             )}
 
+          {/* Display Course List */}
           {gradeReportData.courses &&
             Array.isArray(gradeReportData.courses) &&
             gradeReportData.courses.length > 0 && (
@@ -97,10 +112,18 @@ const GradeReport = () => {
               </div>
             )}
 
-          {(!gradeReportData.courses ||
-            gradeReportData.courses.length === 0) && (
-            <p>No course details found in the report.</p>
-          )}
+          {/* Message if no course data is available but report data exists */}
+          {gradeReportData.courses &&
+            Array.isArray(gradeReportData.courses) &&
+            gradeReportData.courses.length === 0 && (
+              <p>No course details found in the report.</p>
+            )}
+          {/* Also handle case where courses might be null/undefined but other data exists */}
+          {!gradeReportData.courses &&
+            (gradeReportData.semesterWiseResults ||
+              gradeReportData.cumulativeCGPA !== undefined) && (
+              <p>No course details found in the report.</p>
+            )}
         </div>
       ) : (
         !loading && !error && <p>No grade report found.</p>
