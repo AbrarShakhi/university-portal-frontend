@@ -3,7 +3,7 @@ import CgpaCal from "../pages/menu/CgpaCal";
 import ChangePassword from "../pages/menu/ChangePassword";
 import Class from "../pages/menu/Class";
 import CourseList from "../pages/menu/CourseList";
-import FacEval from "../pages/menu/facEval";
+import FacEval from "../pages/menu/FacEval";
 import Faculty from "../pages/menu/Faculty";
 import GradeReport from "../pages/menu/GradeReport";
 import Ledger from "../pages/menu/Ledger";
