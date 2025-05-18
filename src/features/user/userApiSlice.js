@@ -384,3 +384,67 @@ export const getIsFacEval = createAsyncThunk(
     }
   },
 );
+
+export const getCurrentSemester = createAsyncThunk(
+  "user/getCurrentSemester",
+  async (_, { rejectWithValue }) => {
+    try {
+      const url = "http://localhost:8000/api/v1/current-semester";
+
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+
+      console.log(
+        "Frontend (userApiSlice): getCurrentSemester fulfilled",
+        response.data,
+      );
+
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Frontend (userApiSlice): getCurrentSemester Error Response Data:",
+          error.response.data,
+        );
+      } else {
+        console.error(
+          "Frontend (userApiSlice): getCurrentSemester Request Setup Error:",
+          error.message,
+        );
+      }
+    }
+  },
+);
+
+export const getIsAdvising = createAsyncThunk(
+  "user/getIsAdvising", // Action type name
+  async (_, { rejectWithValue }) => {
+    try {
+      const url = "http://localhost:8000/api/v1/is-advising";
+
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+
+      console.log(
+        "Frontend (userApiSlice): getIsAdvising fulfilled",
+        response.data,
+      );
+
+      return response.data.is_advising;
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Frontend (userApiSlice): getIsAdvising Error Response Data:",
+          error.response.data,
+        );
+      } else {
+        console.error(
+          "Frontend (userApiSlice): getIsAdvising Request Setup Error:",
+          error.message,
+        );
+      }
+    }
+  },
+);

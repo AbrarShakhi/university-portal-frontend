@@ -12,6 +12,8 @@ import {
   getCourseInfo,
   getClassSchedule,
   getIsFacEval,
+  getIsAdvising,
+  getCurrentSemester,
 } from "./userApiSlice";
 
 const userSlice = createSlice({
@@ -31,6 +33,14 @@ const userSlice = createSlice({
     isFacEval: false,
     isFacEvalLoading: false,
     isFacEvalError: null,
+
+    currentSemester: null,
+    currentSemesterLoading: false,
+    currentSemesterError: null,
+
+    isAdvising: false,
+    isAdvisingLoading: false,
+    isAdvisingError: null,
 
     facultyLoading: false,
     facultyError: null,
@@ -116,6 +126,14 @@ const userSlice = createSlice({
       state.classSchedule = null;
       state.classScheduleError = null;
     },
+    clearIsAdvising: (state) => {
+      state.isAdvising = false;
+      state.isAdvisingError = null;
+    },
+    clearCurrentSemester: (state) => {
+      state.currentSemester = null;
+      state.currentSemesterError = null;
+    },
 
     setUserLoading: (state, action) => {
       console.log("userSlice: Setting general loader state to", action.payload);
@@ -179,10 +197,6 @@ const userSlice = createSlice({
     },
 
     setCourseInfoLoading: (state, action) => {
-      console.log(
-        "userSlice: Setting course info loader state to",
-        action.payload,
-      );
       state.courseInfoLoading = action.payload;
     },
     setClassScheduleLoading: (state, action) => {
@@ -191,6 +205,12 @@ const userSlice = createSlice({
         action.payload,
       );
       state.classScheduleLoading = action.payload;
+    },
+    setIsAdvisingLoading: (state, action) => {
+      state.isAdvisingLoading = action.payload;
+    },
+    setCurrentSemesterLoading: (state, action) => {
+      state.currentSemesterLoading = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -455,6 +475,41 @@ const userSlice = createSlice({
           action.error.message ||
           "Failed to fetch class schedule";
         state.classSchedule = null;
+      })
+      .addCase(getIsAdvising.pending, (state) => {
+        state.isAdvisingLoading = true;
+        state.isAdvisingError = null;
+      })
+      .addCase(getIsAdvising.fulfilled, (state, action) => {
+        state.isAdvisingLoading = false;
+        state.isAdvisingError = null;
+        state.isAdvising = action.payload;
+      })
+      .addCase(getIsAdvising.rejected, (state, action) => {
+        state.isAdvisingLoading = false;
+        state.isAdvisingError =
+          action.payload ||
+          action.error.message ||
+          "Failed to fetch advising status";
+        state.isAdvising = false;
+      })
+      .addCase(getCurrentSemester.pending, (state) => {
+        state.currentSemesterLoading = true;
+        state.currentSemesterError = null;
+        state.currentSemester = null;
+      })
+      .addCase(getCurrentSemester.fulfilled, (state, action) => {
+        state.currentSemesterLoading = false;
+        state.currentSemesterError = null;
+        state.currentSemester = action.payload;
+      })
+      .addCase(getCurrentSemester.rejected, (state, action) => {
+        state.currentSemesterLoading = false;
+        state.currentSemesterError =
+          action.payload ||
+          action.error.message ||
+          "Failed to fetch current semester";
+        state.currentSemester = null;
       });
   },
 });
@@ -512,9 +567,20 @@ export const selectFacultyTeachesLoading = (state) =>
 export const selectFacultyTeachesError = (state) =>
   state.user.facultyTeachesError;
 
+export const selectIsAdvising = (state) => state.user.isAdvising;
+export const selectIsAdvisingLoading = (state) => state.user.isAdvisingLoading;
+export const selectIsAdvisingError = (state) => state.user.isAdvisingError;
+
+export const selectCurrentSemester = (state) => state.user.currentSemester;
+export const selectCurrentSemesterLoading = (state) =>
+  state.user.currentSemesterLoading;
+export const selectCurrentSemesterError = (state) =>
+  state.user.currentSemesterError;
+
 export const {
   clearStudentProfile,
   clearIsFacEval,
+  clearCurrentSemester,
   clearFacultyList,
   clearFacultyInfo,
   clearFacultyTeaches,
@@ -524,6 +590,7 @@ export const {
   clearCourseInfo,
   clearCourseList,
   clearClassSchedule,
+  clearIsAdvising,
   setTuitionFeesLoading,
   setTuitionHistoryLoading,
   setGradeReportLoading,
@@ -535,6 +602,8 @@ export const {
   setCourseListLoading,
   setCourseInfoLoading,
   setClassScheduleLoading,
+  setIsAdvisingLoading,
+  setCurrentSemesterLoading,
 } = userSlice.actions;
 
 export default userSlice.reducer;

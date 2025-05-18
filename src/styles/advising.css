@@ -1,4 +1,4 @@
-.fac-eval-container {
+.advising-container {
   padding: 30px;
   background-color: #ffffff;
   border-radius: 10px;
@@ -9,7 +9,7 @@
   font-family: "Inter", sans-serif;
 }
 
-.fac-eval-container h2 {
+.advising-container h2 {
   color: #0056b3;
   font-size: 2em;
   margin-top: 0;
@@ -23,7 +23,6 @@
   border-radius: 8px;
   font-size: 1.1em;
   font-weight: 600;
-  margin-bottom: 20px;
 }
 
 .status-active {
@@ -38,33 +37,8 @@
   border: 1px solid #f5c6cb;
 }
 
-.current-semester-info {
-  margin-top: 30px;
-  padding: 20px;
-  border: 1px solid #acc2d9;
-  border-radius: 10px;
-  background-color: #ffffff;
-  text-align: center;
-}
-
-.current-semester-info h3 {
-  color: #0056b3;
-  font-size: 1.5em;
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.semester-display {
-  font-size: 1.2em;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
-}
-
-.fac-eval-container > p,
-.current-semester-info > p {
-  font-size: 1.2em;
+.advising-container > p {
+  font-size: 1em;
   margin-top: 15px;
   text-align: center;
 }

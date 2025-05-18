@@ -1,11 +1,17 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getIsFacEval } from "../../features/user/userApiSlice";
+import {
+  getIsFacEval,
+  getCurrentSemester,
+} from "../../features/user/userApiSlice";
 
 import {
   selectIsFacEval,
   selectIsFacEvalLoading,
   selectIsFacEvalError,
+  selectCurrentSemester,
+  selectCurrentSemesterLoading,
+  selectCurrentSemesterError,
 } from "../../features/user/userSlice";
 
 import "../../styles/facEval.css";
@@ -14,22 +20,31 @@ const FacEval = () => {
   const dispatch = useDispatch();
 
   const isFacEval = useSelector(selectIsFacEval);
-  const loading = useSelector(selectIsFacEvalLoading);
-  const error = useSelector(selectIsFacEvalError);
+  const isFacEvalLoading = useSelector(selectIsFacEvalLoading);
+  const isFacEvalError = useSelector(selectIsFacEvalError);
+
+  const currentSemester = useSelector(selectCurrentSemester);
+  const currentSemesterLoading = useSelector(selectCurrentSemesterLoading);
+  const currentSemesterError = useSelector(selectCurrentSemesterError);
 
   useEffect(() => {
-    console.log("FacEval.jsx: Dispatching getIsFacEval thunk.");
     dispatch(getIsFacEval());
+
+    dispatch(getCurrentSemester());
   }, [dispatch]);
 
   return (
     <div className="fac-eval-container">
       <h2>Faculty Evaluation Status</h2>
 
-      {loading && <p>Loading status...</p>}
-      {error && <p className="error-message">Error: {error}</p>}
+      {isFacEvalLoading && <p>Loading evaluation status...</p>}
+      {isFacEvalError && (
+        <p className="error-message">
+          Error fetching evaluation status: {isFacEvalError}
+        </p>
+      )}
 
-      {!loading && !error && (
+      {!isFacEvalLoading && !isFacEvalError && (
         <div className="status-display">
           {isFacEval ? (
             <p className="status-active">
@@ -42,6 +57,28 @@ const FacEval = () => {
           )}
         </div>
       )}
+
+      <div className="current-semester-info">
+        <h3>Current Academic Semester</h3>
+
+        {currentSemesterLoading && <p>Loading current semester...</p>}
+        {currentSemesterError && (
+          <p className="error-message">
+            Error fetching current semester: {currentSemesterError}
+          </p>
+        )}
+
+        {currentSemester && !currentSemesterLoading && !currentSemesterError ? (
+          <p className="semester-display">
+            ~ {currentSemester.season} {currentSemester.year} ~
+          </p>
+        ) : (
+          !currentSemesterLoading &&
+          !currentSemesterError && (
+            <p>Current semester information not available.</p>
+          )
+        )}
+      </div>
     </div>
   );
 };
