@@ -1,5 +1,9 @@
 import Advising from "../pages/menu/Advising";
+import CgpaCal from "../pages/menu/CgpaCal";
 import ChangePassword from "../pages/menu/ChangePassword";
+import Class from "../pages/menu/Class";
+import CourseList from "../pages/menu/CourseList";
+import FacEval from "../pages/menu/facEval";
 import Faculty from "../pages/menu/Faculty";
 import GradeReport from "../pages/menu/GradeReport";
 import Ledger from "../pages/menu/Ledger";
@@ -41,8 +45,24 @@ const privateRouter = [
             element: <Ledger />,
           },
           {
+            path: "cgpa",
+            element: <CgpaCal />,
+          },
+          {
+            path: "course",
+            element: <CourseList />,
+          },
+          {
             path: "grade-report",
             element: <GradeReport />,
+          },
+          {
+            path: "class",
+            element: <Class />,
+          },
+          {
+            path: "evaluation",
+            element: <FacEval />,
           },
         ],
       },

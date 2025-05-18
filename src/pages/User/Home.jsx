@@ -58,20 +58,23 @@ const Home = () => {
               </li>
 
               <li>
-                <NavLink to="/std-home/courses">Course Schedule</NavLink>
+                <NavLink to="class">Class Schedule</NavLink>
               </li>
 
               <li>
                 <NavLink to="faculty">Faculty</NavLink>
               </li>
               <li>
-                <NavLink to="/std-home/evaluation">Faculty Evaluation</NavLink>
+                <NavLink to="evaluation">Faculty Evaluation</NavLink>
               </li>
               <li>
-                <NavLink to="/std-home/evaluation">Courses</NavLink>
+                <NavLink to="course">Courses</NavLink>
               </li>
               <li>
-                <NavLink to="grade-report">CGPA calculator</NavLink>
+                <NavLink to="grade-report">Grade Report</NavLink>
+              </li>
+              <li>
+                <NavLink to="cgpa">CGPA calculator</NavLink>
               </li>
               <li>
                 <NavLink

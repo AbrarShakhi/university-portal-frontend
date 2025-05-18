@@ -27,7 +27,7 @@
 
       .auth-form {
         width: 300px;
-        margin-top: 5%;
+
         input {
           display: flex;
           flex-direction: column;
@@ -87,7 +87,7 @@
       justify-content: center;
       align-items: center;
       font-family: "Zain";
-      margin-top: 10%;
+      margin-top: 8%;
       .facebook {
         font-size: 1.2rem;
         color: #000;
